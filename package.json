@@ -1,0 +1,26 @@
+{
+  "name": "wlh_web_pro",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@bpmn-io/properties-panel": "2.2.1",
+    "@logicflow/core": "1.2.27",
+    "@logicflow/extension": "1.2.27",
+    "bpmn-js": "13.2.0",
+    "bpmn-js-properties-panel": "2.1.0",
+    "camunda-bpmn-moddle": "^7.0.1",
+    "element-plus": "^2.9.7",
+    "vue": "^3.2.45"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.3",
+    "vite": "^6.2.4",
+    "vite-plugin-vue-devtools": "^7.7.2"
+  }
+}
