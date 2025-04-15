@@ -1,33 +1,61 @@
-<!--
- * @Author: guoshouying
- * @Date: 2025-04-09 14:41:33
- * @LastEditors: guoshouying
- * @LastEditTime: 2025-04-14 11:04:08
- * @FilePath: \wlh_web_pro\src\components\LogicFlow.vue
--->
-<script setup>
+<script setup lang="ts">
 import LogicFlow from "@logicflow/core";
 import "@logicflow/core/dist/style/index.css";
-import { onMounted, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import UserTaskNode from "./node/UserTaskNode";
 import CircleNode from "./node/CircleNode";
 import UserTaskHtml from "./node/UserTaskHtml";
 import UserTaskVue from "./node/UserTaskVue";
 import customEdge from "./edge/customEdge";
-import * as LogicFlowExtension from '@logicflow/extension';
-console.log(LogicFlowExtension);
+import { Menu } from "@logicflow/extension";
 import { DndPanel, Control, MiniMap,Snapshot } from "@logicflow/extension";
 import "@logicflow/extension/lib/style/index.css";
+LogicFlow.use(Menu);
 LogicFlow.use(DndPanel);
 LogicFlow.use(Control);
 // 注册 miniMap 扩展
 LogicFlow.use(MiniMap);
 LogicFlow.use(Snapshot);
+   // 手动触发矩形节点拖拽
+let  startDragRect = (lf) => {
+  lf.dnd.startDrag({
+    type: 'rect',
+    text: '矩形节点',
+    width: 100,
+    height: 60
+  });
+};
+// 手动触发圆形节点拖拽
+let startDragCircle =(lf) => {
+  lf.dnd.startDrag({
+    type: 'circle',
+    text: '圆形节点',
+    properties: {
+      backgroundColor: '#52c41a'
+    },
+    r: 30  // 圆形半径
+  });
+};
+ // 手动触发自定义节点拖拽
+ let startDragCustom = (lf) => {
+  lf.dnd.startDrag({
+    type: 'user-task-node',
+    text: '自定义节点',
+    properties: {
+      customProp: 'value'
+    },
+    width: 120,
+    height: 80,
+    x:200,
+    y:200
+  });
+};
 // 注册扩展
 let container = ref();
+let lf = reactive(null);
 let inter = () => {
   console.log("HelloWorld mounted", container.value);
-  let lf = new LogicFlow({
+  lf = new LogicFlow({
     container: container.value,
     grid: true,
     style: {
@@ -148,6 +176,47 @@ let inter = () => {
       lf.render(JSON.parse(data)); // 渲染数据到画布
     },
   });
+  // 为菜单追加选项（必须在 lf.render() 之前设置）
+lf.extension.menu.addMenuConfig({
+  nodeMenu: [
+    {
+      text: "分享",
+      callback() {
+        alert("分享成功！");
+      },
+    },
+    {
+      text: "属性",
+      callback(node:any) {
+        alert(`
+          节点id：${node.id}
+          节点类型：${node.type}
+          节点坐标：(x: ${node.x}, y: ${node.y})`);
+      },
+    },
+  ],
+  edgeMenu: [
+    {
+      text: "属性",
+      callback(edge: any) {
+        alert(`
+          边id：${edge.id}
+          边类型：${edge.type}
+          边坐标：(x: ${edge.x}, y: ${edge.y})
+          源节点id：${edge.sourceNodeId}
+          目标节点id：${edge.targetNodeId}`);
+      },
+    },
+  ],
+  graphMenu: [
+    {
+      text: "分享",
+      callback() {
+        alert("分享成功！");
+      },
+    },
+  ],
+});
   // 监听节点点击事件
   //  lf.value.on('node:click', ({ data }) => {
   //         console.log('点击的节点数据:', data);
@@ -190,6 +259,9 @@ let inter = () => {
       console.log("dddddddddddd=>", dddd);
     },
   });
+  lf.on("connection:not-allowed", (msg) => {
+      console.log(msg);
+    });
   lf.setTheme({
     circle: {
       stroke: "#a3c0a5", // 边框颜色
@@ -208,17 +280,6 @@ let inter = () => {
   });
   lf.render({
     nodes: [
-      {
-        id: "1",
-        type: "user-task-node",
-        x: 150,
-        y: 100,
-        text: "用户任务",
-        properties: {
-          statu: "pass",
-          name: "用户任务",
-        },
-      },
       {
         id: "1",
         type: "user-task-node",
@@ -304,6 +365,12 @@ onMounted(() => {
 </script>
 
 <template>
+   <!-- 自定义按钮区域 -->
+   <div class="custom-toolbar">
+      <button @dragend="startDragRect(lf)"  draggable="true">拖拽矩形</button>
+      <button @dragend="startDragCircle(lf)" draggable="true">拖拽圆形</button>
+      <button @dragend="startDragCustom(lf)" draggable="true">拖拽自定义节点</button>
+    </div>
   <div class="container" ref="container"></div>
 </template>
 

@@ -50,6 +50,13 @@ class UserTaskModel extends RectResize.model {
     // this.radius = 50;
     this.text.draggable = false; // 不允许文本被拖动
     this.text.editable = true; // 不允许文本被编辑
+    const circleOnlyAsTarget = {
+      message: "正方形节点下一个节点只能是圆形节点",
+      validate: (sourceNode, targetNode, sourceAnchor, targetAnchor) => {
+        return targetNode.type === "circle";
+      },
+    };
+    this.sourceRules.push(circleOnlyAsTarget);
   }
 }
 

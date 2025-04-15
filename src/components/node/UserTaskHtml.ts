@@ -2,7 +2,7 @@
  * @Author: guoshouying
  * @Date: 2025-04-10 14:12:06
  * @LastEditors: guoshouying
- * @LastEditTime: 2025-04-11 10:20:23
+ * @LastEditTime: 2025-04-15 10:28:02
  * @FilePath: \wlh_web_pro\src\components\node\UserTaskHtml.ts
  */
 import { HtmlResize, RectResize } from "@logicflow/extension";
@@ -17,12 +17,15 @@ class UseTaskHtmlModel extends HtmlResize.model {
   }
 }
 class UseTaskHtmlView extends HtmlResize.view {
+  // 判断是否需要更新
   shouldUpdate() {
+    // 获取当前属性值
     const data = {
       ...this.props.model.getProperties(),
       isSelected: this.props.model.isSelected,
       isHovered: this.props.model.isHovered,
     };
+    // 如果属性没有变化，则不更新
     if (this.preProperties && this.preProperties === JSON.stringify(data))
       return false; // 如果属性没有变化，则不更新
     this.preProperties = JSON.stringify(data); // 更新上一个属性值
