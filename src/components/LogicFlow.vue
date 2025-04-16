@@ -365,6 +365,7 @@ onMounted(() => {
 </script>
 
 <template>
+  <div id="div"><span>FSDF</span></div>
    <!-- 自定义按钮区域 -->
    <div class="custom-toolbar">
       <button @dragend="startDragRect(lf)"  draggable="true">拖拽矩形</button>
@@ -374,7 +375,12 @@ onMounted(() => {
   <div class="container" ref="container"></div>
 </template>
 
-<style>
+<style lang="scss" scoped>
+#div{
+    span{
+      color: blue;
+    }
+}
 .container {
   width: 90vw;
   height: 90vh;
