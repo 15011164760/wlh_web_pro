@@ -32,7 +32,7 @@ let startDragCircle =(lf) => {
     text: '圆形节点',
     properties: {
       backgroundColor: '#52c41a'
-    },
+    }, 
     r: 30  // 圆形半径
   });
 };
