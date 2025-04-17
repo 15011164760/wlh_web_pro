@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogicFlow 自定义拖动面板</title>
+    <!--LogicFlow core包css-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@logicflow/core/dist/style/index.css" />
+    <!--LogicFlow extension包css-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@logicflow/extension/lib/style/index.css" />
+    <!--LogicFlow core包js-->
+    <script src="https://cdn.jsdelivr.net/npm/@logicflow/core/dist/logic-flow.js"></script>
+    <!--LogicFlow的插件支持单个引入，这里以菜单插件为例-->
+    <script src="https://cdn.jsdelivr.net/npm/@logicflow/extension/lib/Menu.js"></script>
+    <style>
+        #container {
+            width: 100%;
+            height: 600px;
+            display: flex;
+        }
+
+        #palette {
+            width: 200px;
+            height: 100%;
+            border-right: 1px solid #ccc;
+            padding: 10px;
+            background-color: #f5f5f5;
+        }
+
+        #graph-container {
+            flex: 1;
+            height: 100%;
+        }
+
+        .custom-rect {
+            width: 100px;
+            height: 60px;
+            background-color: #1890ff;
+            color: white;
+            text-align: center;
+            line-height: 60px;
+            border-radius: 4px;
+            cursor: move;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .custom-rect:hover {
+            background-color: #40a9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .lf-node-selected .custom-rect-view {
+            box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.3);
+        }
+
+        .custom-rect-view {
+            width: 100%;
+            height: 100%;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div id="palette">
+            <h3>自定义面板</h3>
+            <div class="custom-rect" data-type="custom-rect">蓝色矩形</div>
+            <div class="custom-rect" style="background-color: #52c41a;" data-type="custom-green-rect">绿色矩形</div>
+        </div>
+        <div id="graph-container"></div>
+    </div>
+
+    <script>
+        // 自定义矩形节点视图
+        class CustomRectView extends LogicFlow.RectNode {
+            getShape() {
+                const { model } = this.props;
+                const { x, y, width, height, radius } = model;
+                const style = model.getNodeStyle();
+
+                return h("g", {}, [
+                    h("rect", {
+                        ...style,
+                        x: x - width / 2,
+                        y: y - height / 2,
+                        rx: radius,
+                        ry: radius,
+                        width,
+                        height,
+                    }),
+                    h('text', {
+                        fill: style.stroke,
+                        fontSize: 12,
+                        x,
+                        y,
+                        textAnchor: 'middle',
+                        dominantBaseline: 'middle'
+                    }, model.text ? model.text.value : '')
+                ]);
+            }
+        }
+
+        // 自定义绿色矩形节点视图
+        class CustomGreenRectView extends LogicFlow.RectNode {
+            getShape() {
+                const { model } = this.props;
+                const { x, y, width, height, radius } = model;
+                const style = model.getNodeStyle();
+
+                return h("g", {}, [
+                    h("rect", {
+                        ...style,
+                        fill: '#d9f7be',
+                        stroke: '#52c41a',
+                        x: x - width / 2,
+                        y: y - height / 2,
+                        rx: radius,
+                        ry: radius,
+                        width,
+                        height,
+                    }),
+                    h('text', {
+                        fill: '#52c41a',
+                        fontSize: 12,
+                        x,
+                        y,
+                        textAnchor: 'middle',
+                        dominantBaseline: 'middle'
+                    }, model.text ? model.text.value : '')
+                ]);
+            }
+        }
+
+        // 自定义矩形节点模型
+        class CustomRectModel extends LogicFlow.RectNodeModel {
+            initNodeData(data) {
+                super.initNodeData(data);
+                this.width = 120;
+                this.height = 80;
+                this.radius = 8;
+                this.text = {
+                    value: data.text || '矩形节点',
+                    editable: true
+                };
+            }
+
+            getNodeStyle() {
+                const style = super.getNodeStyle();
+                style.stroke = '#1890ff';
+                style.strokeWidth = 2;
+                return style;
+            }
+        }
+
+        // 自定义绿色矩形节点模型
+        class CustomGreenRectModel extends LogicFlow.RectNodeModel {
+            initNodeData(data) {
+                super.initNodeData(data);
+                this.width = 120;
+                this.height = 80;
+                this.radius = 8;
+                this.text = {
+                    value: data.text || '绿色矩形',
+                    editable: true
+                };
+            }
+
+            getNodeStyle() {
+                const style = super.getNodeStyle();
+                style.stroke = '#52c41a';
+                style.strokeWidth = 2;
+                return style;
+            }
+        }
+
+        const lf = new LogicFlow({
+            container: document.querySelector('#graph-container'),
+            grid: {
+                size: 10,
+                visible: true,
+                type: 'dot',
+                config: {
+                    color: '#e0e0e0',
+                    thickness: 1,
+                }
+            },
+            width: 800,
+            height: 600,
+            keyboard: {
+                enabled: true
+            },
+            edgeTextDraggable: true,
+            nodeTextDraggable: true
+        });
+
+        // 注册自定义节点
+        lf.register('custom-rect', {
+            view: CustomRectView,
+            model: CustomRectModel
+        });
+
+        lf.register('custom-green-rect', {
+            view: CustomGreenRectView,
+            model: CustomGreenRectModel
+        });
+
+        // 初始化 LogicFlow
+        lf.render();
+
+        // 实现拖动功能
+        const paletteEl = document.getElementById('palette');
+        const customNodes = document.querySelectorAll('.custom-rect');
+
+        customNodes.forEach(node => {
+            node.addEventListener('mousedown', (e) => {
+                const type = e.target.getAttribute('data-type');
+                if (type) {
+                    lf.dnd.startDrag({
+                        type,
+                        text: e.target.textContent
+                    });
+                }
+            });
+        });
+
+        // 添加节点时设置文本
+        lf.on('node:add', (data) => {
+            const { model } = data;
+            model.setText(model.text.value);
+        });
+    </script>
+</body>
+
+</html>

@@ -7,7 +7,7 @@ import CircleNode from "./node/CircleNode";
 import UserTaskHtml from "./node/UserTaskHtml";
 import UserTaskVue from "./node/UserTaskVue";
 import customEdge from "./edge/customEdge";
-import { Menu } from "@logicflow/extension";
+import { Menu,lfJson2Xml } from "@logicflow/extension";
 import { DndPanel, Control, MiniMap,Snapshot } from "@logicflow/extension";
 import "@logicflow/extension/lib/style/index.css";
 LogicFlow.use(Menu);
@@ -224,7 +224,7 @@ lf.extension.menu.addMenuConfig({
   //         data.properties = { ...data.properties, color: 'blue' };
   //         lf.value.updateNodeAttr(data.id, { properties: data.properties }); // 更新节点属性
   //       });
-  lf.on("node:click", (data) => {
+/*   lf.on("node:click", (data) => {
     // console.log("node:click", data.position);
     console.log("点击的节点数据:", data.data);
     data = data.data;
@@ -233,10 +233,18 @@ lf.extension.menu.addMenuConfig({
     });
     console.log(lf.getProperties(data.id));
     // console.log(data.properties)
-  });
-  // lf.on("element:click", (args) => {
-  //   console.log("element:click", args.e.target);
+  }); */
+  // lf.on("node:dnd-add", (data) => {
+  //   // console.log("node:click", data.position);
+  //   console.log("node:dnd-add:外部拖入节点添加时触发", data.data);
+  //   // console.log(data.properties)
   // });
+  // lf.on("node:dnd-drag", (data) => {
+  //   // console.log("node:click", data.position);
+  //   console.log("node:dnd-drag:外部拖入节点拖拽中触发", data.data);
+  //   // console.log(data.properties)
+  // });
+
   lf.extension.control.addItem({
     key: "mini-map2",
     iconClass: "custom-clear",
@@ -254,9 +262,11 @@ lf.extension.menu.addMenuConfig({
     text: "导出图片",
     onClick: (lf, ev) => {
       console.log("lf.getSnapshot();=======");
-      let dddd=lf.getSnapshot();
-      // let dddd=lf.getPngData();
-      console.log("dddddddddddd=>", dddd);
+      lf.getSnapshot();
+      const getSnapshotBase64 = lf.getSnapshotBase64().then((res)=>{
+        console.log("getSnapshotBase64",res.data);
+      })
+      // let fff=lf.getPng();
     },
   });
   lf.on("connection:not-allowed", (msg) => {
@@ -351,6 +361,31 @@ lf.extension.menu.addMenuConfig({
     //  }
     ],
   });
+//     // 监听拖拽结束事件
+// lf.on("node:dnd-dragend", (data) => {
+//   console.log("node:dnd-dragend: 拖拽结束", data.data);
+//   // 这里可以处理拖拽结束后的逻辑，比如保存节点位置或触发其他操作
+ 
+//   // 示例：获取拖拽后的节点位置
+//   const nodeModel = data.data.nodeModel; // 拖拽的节点模型
+//   if (nodeModel) {
+//     console.log("节点新位置:", nodeModel.x, nodeModel.y);
+//     // 你可以在这里将新位置发送到后端保存
+//   }
+// });
+// // 监听拖拽中事件
+// lf.on("node:dnd-drag", (data) => {
+//   console.log("node:dnd-drag: 外部拖入节点拖拽中触发", data.data);
+//   // lf.dnd.stopDrag(); // 鼠标释放时结束拖拽
+//   // 这里可以处理拖拽中的逻辑，比如动态更新预览位置
+// });
+// lf.on('node:dnd-add', ({ data }) => {
+//   console.log('节点已添加:', data);
+//   // 可以在这里修改节点属性
+//   lf.setProperties(data.id, {
+//     customProp: 'value'
+//   });
+// });
 };
 defineProps({
   // msg: {
@@ -368,14 +403,14 @@ onMounted(() => {
   <div id="div"><span>FSDF</span></div>
    <!-- 自定义按钮区域 -->
    <div class="custom-toolbar">
-      <button @dragend="startDragRect(lf)"  draggable="true">拖拽矩形</button>
-      <button @dragend="startDragCircle(lf)" draggable="true">拖拽圆形</button>
-      <button @dragend="startDragCustom(lf)" draggable="true">拖拽自定义节点</button>
+      <button @mousedown="startDragRect(lf)" >拖拽矩形</button>
+      <button @mousedown="startDragCircle(lf)">拖拽圆形</button>
+      <button @mousedown="startDragCustom(lf)">拖拽自定义节点</button>
     </div>
   <div class="container" ref="container"></div>
 </template>
 
-<style lang="scss" scoped>
+<style  lang="scss" scoped>
 #div{
     span{
       color: blue;
@@ -386,30 +421,40 @@ onMounted(() => {
   height: 90vh;
 }
 
-.custom-minimap {
+::v-deep .custom-minimap {
   width: 16px;
   height: 16px;
   background-image: url("../assets/1.png") !important;
   background-size: cover;
 }
 
-.custom-save {
+::v-deep .custom-save {
   width: 16px;
   height: 16px;
   background-image: url("../assets/2.png") !important;
   background-size: cover;
 }
 
-.custom-clear {
+::v-deep .custom-clear {
   width: 16px;
   height: 16px;
   background-image: url("../assets/3.png") !important;
   background-size: cover;
 }
-.custom-downloadImg{
+::v-deep .custom-downloadImg{
   width: 16px;
   height: 16px;
   background-image: url("../assets/4.png") !important;
   background-size: cover;
+}
+::v-deep .custom-toolbar{
+  position: absolute;
+  top: 200px;
+  left: 100px;
+  z-index: 1000;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 </style>
