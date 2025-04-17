@@ -269,7 +269,41 @@ lf.extension.menu.addMenuConfig({
       // let fff=lf.getPng();
     },
   });
+  function toggleFullScreen(element) {
+  if (!document.fullscreenElement) {
+    if (element.requestFullscreen) {
+      element.requestFullscreen();
+    } else if (element.mozRequestFullScreen) {
+      element.mozRequestFullScreen();
+    } else if (element.webkitRequestFullscreen) {
+      element.webkitRequestFullscreen();
+    } else if (element.msRequestFullscreen) {
+      element.msRequestFullscreen();
+    }
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+  }
+}
+  lf.extension.control.addItem({
+    key: 'full-screen',
+    iconClass: 'custom-fullscreen',
+    title: '全屏',
+    text: '全屏',
+    onClick: (lf, ev) => {
+      toggleFullScreen(lf.container);
+    },
+  });
+  // 监听连接被拒绝事件
   lf.on("connection:not-allowed", (msg) => {
+      // 打印拒绝连接的消息
       console.log(msg);
     });
   lf.setTheme({
@@ -400,7 +434,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="div"><span>FSDF</span></div>
+  <!-- <div id="div"><span>FSDF</span></div> -->
    <!-- 自定义按钮区域 -->
    <div class="custom-toolbar">
       <button @mousedown="startDragRect(lf)" >拖拽矩形</button>
@@ -447,14 +481,40 @@ onMounted(() => {
   background-image: url("../assets/4.png") !important;
   background-size: cover;
 }
-::v-deep .custom-toolbar{
-  position: absolute;
-  top: 200px;
-  left: 100px;
-  z-index: 1000;
-  background-color: #fff;
+::v-deep .custom-fullscreen{
+  width: 16px;
+  height: 16px;
+  background-image: url("../assets/fullscreen.png") !important;
+  background-size: cover;
+}
+.custom-toolbar{
+  // position: absolute;
+  // top: 200px;
+  // left: 100px;
+  // z-index: 1000;
+  background-color: #b1bde9;
   padding: 10px;
   border-radius: 5px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  border: 1px solid #ccc;
+  display: flex;
+  gap: 10px;
+  button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+  button:active {
+    background-color: #004085;
+  }
+  button:focus {
+    outline: none;
+  }
 }
 </style>
