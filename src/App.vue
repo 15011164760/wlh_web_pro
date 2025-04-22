@@ -1,11 +1,9 @@
 <script lang="ts" setup>
-import LogicFlow from './components/LogicFlow.vue';
+import LogicFlow from "@/views/flowUI/LogicFlow.vue";
 </script>
 
 <template>
- <LogicFlow />
+  <LogicFlow />
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

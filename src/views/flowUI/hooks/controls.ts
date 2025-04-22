@@ -76,8 +76,8 @@ const flowControls = (lf, exportDataRef) => {
   });
   lf.extension.control.addItem({
     key: "mini-map3",
-    iconClass: "custom-downloadImg",
-    title: "sdd",
+    iconClass: "custom-jsonsave",
+    title: "JSON下载",
     text: "JSON下载",
     onClick: (lf, ev) => {
       console.log("lfJson2Xml;=======");
@@ -92,8 +92,8 @@ const flowControls = (lf, exportDataRef) => {
   });
   lf.extension.control.addItem({
     key: "mini-map3",
-    iconClass: "custom-downloadImg",
-    title: "sdd",
+    iconClass: "custom-xmlsave",
+    title: "XML下载",
     text: "XML下载",
     onClick: (lf, ev) => {
       console.log("lfJson2Xml;=======");
@@ -114,7 +114,7 @@ const flowControls = (lf, exportDataRef) => {
 
   lf.extension.control.addItem({
     key: "mini-map4",
-    iconClass: "custom-downloadImg",
+    iconClass: "custom-jsonload",
     title: "导入JSON",
     text: "导入JSON",
     onClick: (lf, ev) => {

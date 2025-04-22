@@ -2,8 +2,8 @@
  * @Author: yangdongxu
  * @Date: 2025-04-09 14:41:33
  * @LastEditors: yangdongxu
- * @LastEditTime: 2025-04-22 16:04:58
- * @FilePath: \trust-shield-webd:\find_work_2024_year_first\wlh_web_pro\src\components\LogicFlow.vue
+ * @LastEditTime: 2025-04-22 16:44:10
+ * @FilePath: \trust-shield-webd:\find_work_2024_year_first\wlh_web_pro\src\views\flowUI\LogicFlow.vue
 -->
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
@@ -50,38 +50,55 @@ onMounted(() => {
 :deep(.custom-minimap) {
   width: 16px;
   height: 16px;
-  background-image: url("../assets/1.png") !important;
+  background-image: url("@/assets/flow/1.png") !important;
   background-size: cover;
 }
 
 :deep(.custom-save) {
   width: 16px;
   height: 16px;
-  background-image: url("../assets/2.png") !important;
+  background-image: url("@/assets/flow/2.png") !important;
   background-size: cover;
 }
 
 :deep(.custom-clear) {
   width: 16px;
   height: 16px;
-  background-image: url("../assets/3.png") !important;
+  background-image: url("@/assets/flow/3.png") !important;
   background-size: cover;
 }
 
 :deep(.custom-downloadImg) {
   width: 16px;
   height: 16px;
-  background-image: url("../assets/4.png") !important;
+  background-image: url("@/assets/flow/4.png") !important;
   background-size: cover;
 }
 
 :deep(.custom-fullscreen) {
   width: 16px;
   height: 16px;
-  background-image: url("../assets/fullscreen.png") !important;
+  background-image: url("@/assets/flow/fullscreen.png") !important;
   background-size: cover;
 }
-
+:deep(.custom-jsonsave) {
+  width: 16px;
+  height: 16px;
+  background-image: url("@/assets/flow/jsonsave.png") !important;
+  background-size: cover;
+}
+:deep(.custom-xmlsave) {
+  width: 16px;
+  height: 16px;
+  background-image: url("@/assets/flow/xmlsave.png") !important;
+  background-size: cover;
+}
+:deep(.custom-jsonload) {
+  width: 16px;
+  height: 16px;
+  background-image: url("@/assets/flow/jsonload.png") !important;
+  background-size: cover;
+}
 .custom-toolbar {
   background-color: #b1bde9;
   padding: 10px;
