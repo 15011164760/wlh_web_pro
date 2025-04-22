@@ -56,7 +56,7 @@ class UserTaskModel extends RectResize.model {
         return targetNode.type === "circle";
       },
     };
-    this.sourceRules.push(circleOnlyAsTarget);
+    // this.sourceRules.push(circleOnlyAsTarget);
   }
 }
 

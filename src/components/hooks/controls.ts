@@ -14,6 +14,10 @@ const flowControls = (lf, exportDataRef) => {
         position.domOverlayPosition.y + 35
       );
     },
+    // onMouseLeave: (lf, ev) => {
+    //   const position = lf.getPointByClient(ev.x, ev.y);
+    //   lf.extension.miniMap.hide();
+    // },
     onClick: (lf, ev) => {
       const position = lf.getPointByClient(ev.x, ev.y);
       lf.extension.miniMap.show(
@@ -115,7 +119,7 @@ const flowControls = (lf, exportDataRef) => {
     text: "导入JSON",
     onClick: (lf, ev) => {
       console.log("点击了mini-map1");
-      exportDataRef.value.fileInput.click();
+      exportDataRef.value.triggerFileInput();
     },
   });
   function toggleFullScreen(element) {

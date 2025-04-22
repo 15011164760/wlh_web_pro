@@ -2,7 +2,7 @@
  * @Author: yangdongxu
  * @Date: 2025-04-22 11:02:39
  * @LastEditors: yangdongxu
- * @LastEditTime: 2025-04-22 16:08:51
+ * @LastEditTime: 2025-04-22 16:13:53
  * @FilePath: \trust-shield-webd:\find_work_2024_year_first\wlh_web_pro\src\components\exportData.vue
 -->
 <template>
@@ -25,12 +25,8 @@ const fileContent = ref(null);
 const triggerFileInput = () => {
   fileInput.value.click();
 };
-const childMethod = () => {
-  console.log("子组件方法被调用");
-};
 defineExpose({
-  fileInput,
-  childMethod,
+  triggerFileInput,
 });
 
 const handleFileChange = (event) => {
